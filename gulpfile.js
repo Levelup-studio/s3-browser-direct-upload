@@ -8,7 +8,6 @@ var gulp        = require('gulp');
     map         = require('map-stream');
     concat      = require('gulp-concat');
     uglify      = require('gulp-uglify');
-    scss        = require('gulp-sass');
     runSeq      = require('run-sequence');
     chmod       = require('gulp-chmod');
     fs          = require('fs');
