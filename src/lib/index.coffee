@@ -21,10 +21,12 @@ class S3Client
 
   # Browser form post params for uploading
   uploadPostForm: (options = {}, cb) ->
+    console.log(this)
     throw new Error 'Callback is required' unless cb
-    { extension, key, bucket, expires, acl, contentLength, algorithm, region, conditionMatching } = options
+    { extension, key, bucket, expires, acl, contentLength, algorithm, region, s3ForcePathStyle, conditionMatching } = options
     key = options.key
     bucket = options.bucket
+    region = options.region
     extension = options.extension ? null
     expires = options.expires ? moment.utc().add(60, 'minutes').toDate()
     acl = options.acl ? 'public-read'
@@ -88,8 +90,8 @@ class S3Client
     stream.params['content-type'] = contentType if contentType
     stream['conditions']  = conditionMatching if conditionMatching
     if options.s3ForcePathStyle
-      stream['public_url']  = "https://s3.amazonaws.com/#{bucket}/#{key}"
-      stream['form_url']    = "https://s3.amazonaws.com/#{bucket}/"
+      stream['public_url']  = "https://#{region}.amazonaws.com/#{bucket}/#{key}"
+      stream['form_url']    = "https://#{region}.amazonaws.com/#{bucket}/"
     else
       stream['public_url']  = "https://#{bucket}.s3.amazonaws.com/#{key}"
       stream['form_url']    = "https://#{bucket}.s3.amazonaws.com/"
