@@ -89,7 +89,7 @@ class S3Client
       "x-amz-signature": signature
     stream.params['content-type'] = contentType if contentType
     stream['conditions']  = conditionMatching if conditionMatching
-    if options.s3ForcePathStyle
+    if this.s3ForcePathStyle
       stream['public_url']  = "https://#{region}.amazonaws.com/#{bucket}/#{key}"
       stream['form_url']    = "https://#{region}.amazonaws.com/#{bucket}/"
     else
