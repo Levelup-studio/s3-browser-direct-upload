@@ -61,7 +61,7 @@ class S3Client
     policyDoc.conditions.push { 'bucket': bucket }
     policyDoc.conditions.push [ 'starts-with', '$key', key ]
     policyDoc.conditions.push { 'acl': acl }
-    policyDoc.conditions.push [ 'starts-with', '$Content-Type', contentType ] if contentType
+    policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
     policyDoc.conditions.push { "x-amz-credential": "#{@accessKeyId}/#{dateShortPolicy}/#{region}/s3/aws4_request" }
