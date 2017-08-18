@@ -33,7 +33,7 @@ class S3Client
     algorithm = options.algorithm ? 'AWS4-HMAC-SHA256'
     region = options.region ? @region
     conditionMatching = options.conditionMatching ? null
-
+    cacheControl = options.cacheControl ? null
     # @TODO options type check
     unless key and bucket
       return cb new Error 'key and bucket are required'
@@ -61,7 +61,7 @@ class S3Client
     policyDoc.conditions.push { 'bucket': bucket }
     policyDoc.conditions.push [ 'starts-with', '$key', key ]
     policyDoc.conditions.push { 'acl': acl }
-    policyDoc.conditions.push { 'cache-control': 'max-age=31536000' }
+    policyDoc.conditions.push { 'cache-control': cacheControl } if cacheControl
     policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
@@ -87,8 +87,8 @@ class S3Client
       "x-amz-date": dateLongPolicy
       "policy": policy
       "x-amz-signature": signature
-      "cache-control": "max-age=31536000"
     stream.params['content-type'] = contentType if contentType
+    stream.params['cache-control'] = cacheControl if cacheControl
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
       stream['public_url']  = "https://s3-#{region}.amazonaws.com/#{bucket}/#{key}"
@@ -110,6 +110,7 @@ class S3Client
     expires = options.expires ? null
     acl = options.acl ? null
     contentLength = options.contentLength ? null
+    cacheControl = options.cacheControl ? null
     
     # @TODO options type check
     unless data and key and bucket
@@ -125,7 +126,7 @@ class S3Client
       return cb new Error 'Data extension not allowed' unless contentType
       params["ContentType"] = contentType
 
-    params["Cache-Control"] = "max-age=31536000, immutable"
+    params["Cache-Control"] = cacheControl if cacheControl
     params["Expires"] = moment.utc(expires) if expires and _.isDate expires
     params["ACL"] = acl if acl
     params["ContentLength"] = contentLength if contentLength
