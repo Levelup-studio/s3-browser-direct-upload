@@ -123,6 +123,7 @@ class S3Client
       return cb new Error 'Data extension not allowed' unless contentType
       params["ContentType"] = contentType
 
+    params["Cache-Control"] = "max-age=31536000, immutable"
     params["Expires"] = moment.utc(expires) if expires and _.isDate expires
     params["ACL"] = acl if acl
     params["ContentLength"] = contentLength if contentLength
@@ -155,6 +156,7 @@ class S3Client
       return cb new Error 'Data extension not allowed' unless contentType
       params["ContentType"] = contentType
 
+    params["Cache-Control"] = "max-age=31536000, immutable"
     params["Expires"] = moment.utc(expires) if expires and _.isDate expires
     params["ACL"] = acl if acl
 
