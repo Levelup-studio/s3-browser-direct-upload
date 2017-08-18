@@ -61,6 +61,7 @@ class S3Client
     policyDoc.conditions.push { 'bucket': bucket }
     policyDoc.conditions.push [ 'starts-with', '$key', key ]
     policyDoc.conditions.push { 'acl': acl }
+    policyDoc.conditions.push { 'cache-control': 'max-age=31536000' }
     policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
@@ -86,8 +87,8 @@ class S3Client
       "x-amz-date": dateLongPolicy
       "policy": policy
       "x-amz-signature": signature
-      "Cache-Control": "max-age=31536000, immutable"
-      "x-amz-meta-Cache-Control": "max-age=31536000, immutable"
+      "cache-control": "max-age=31536000"
+      "x-amz-meta-cache-control": "max-age=31536000"
     stream.params['content-type'] = contentType if contentType
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
