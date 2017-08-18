@@ -87,6 +87,7 @@ class S3Client
       "policy": policy
       "x-amz-signature": signature
       "Cache-Control": "max-age=31536000, immutable"
+      "x-amz-meta-Cache-Control": "max-age=31536000, immutable"
     stream.params['content-type'] = contentType if contentType
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
