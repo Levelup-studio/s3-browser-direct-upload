@@ -33,6 +33,7 @@ class S3Client
     algorithm = options.algorithm ? 'AWS4-HMAC-SHA256'
     region = options.region ? @region
     conditionMatching = options.conditionMatching ? null
+    cacheControl = options.cacheControl ? null
 
     # @TODO options type check
     unless key and bucket
@@ -63,6 +64,7 @@ class S3Client
     policyDoc.conditions.push { 'acl': acl }
     policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
+    policyDoc.conditions.push [ 'cache-control', 0, cacheControl ] if cacheControl
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
     policyDoc.conditions.push { "x-amz-credential": "#{@accessKeyId}/#{dateShortPolicy}/#{region}/s3/aws4_request" }
     policyDoc.conditions.push { "x-amz-date": dateLongPolicy}
@@ -87,6 +89,7 @@ class S3Client
       "policy": policy
       "x-amz-signature": signature
     stream.params['content-type'] = contentType if contentType
+    stream.params['cache-control'] = cacheControl if cacheControl
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
       stream['public_url']  = "https://s3-#{region}.amazonaws.com/#{bucket}/#{key}"
@@ -108,6 +111,7 @@ class S3Client
     expires = options.expires ? null
     acl = options.acl ? null
     contentLength = options.contentLength ? null
+    cacheControl = options.cacheControl ? null
     
     # @TODO options type check
     unless data and key and bucket
@@ -126,6 +130,7 @@ class S3Client
     params["Expires"] = moment.utc(expires) if expires and _.isDate expires
     params["ACL"] = acl if acl
     params["ContentLength"] = contentLength if contentLength
+    params["CacheControl"] = cacheControl if cacheControl
 
     @s3.upload params, (err, data) ->
       return cb err if err
@@ -135,11 +140,12 @@ class S3Client
   # S3.putObject
   put: (options = {}, cb) ->
     throw new Error 'Callback is required' unless cb
-    { extension, key, bucket, expires, acl, contentLength } = options
+    { extension, key, bucket, expires, acl, contentLength, cacheControl } = options
     key = options.key
     bucket = options.bucket
     extension = options.extension ? null
     expires = options.expires ? null
+    cacheControl = options.cacheControl ? null
     acl = options.acl ? null
 
     # @TODO options type check
@@ -157,6 +163,7 @@ class S3Client
 
     params["Expires"] = moment.utc(expires) if expires and _.isDate expires
     params["ACL"] = acl if acl
+    params["Cache-Control"] = cacheControl if cacheControl
 
     @s3.getSignedUrl "putObject", params, (err, data) ->
       return cb err if err
