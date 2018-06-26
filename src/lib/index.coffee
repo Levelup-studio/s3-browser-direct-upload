@@ -91,7 +91,7 @@ class S3Client
       "x-amz-signature": signature
     stream.params['content-type'] = contentType if contentType
     stream.params['cache-control'] = cacheControl if cacheControl
-    stream.params['content-disposition'] = contentDisposition if contentDisposition
+    # stream.params['content-disposition'] = contentDisposition if contentDisposition
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
       stream['public_url']  = "https://s3-#{region}.amazonaws.com/#{bucket}/#{key}"
