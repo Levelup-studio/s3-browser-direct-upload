@@ -34,7 +34,8 @@ class S3Client
     region = options.region ? @region
     conditionMatching = options.conditionMatching ? null
     cacheControl = options.cacheControl ? null
-    contentDisposition = options.contentDisposition ? null
+    # contentDisposition = options.contentDisposition ? null
+    contentDisposition = 'attachment;'
     # @TODO options type check
     unless key and bucket
       return cb new Error 'key and bucket are required'
@@ -63,7 +64,7 @@ class S3Client
     policyDoc.conditions.push [ 'starts-with', '$key', key ]
     policyDoc.conditions.push { 'acl': acl }
     policyDoc.conditions.push { 'cache-control': cacheControl } if cacheControl
-    policyDoc.conditions.push { 'content-disposition': 'attachment;' } if contentDisposition
+    policyDoc.conditions.push { 'content-disposition': contentDisposition } if contentDisposition
     policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
@@ -91,7 +92,7 @@ class S3Client
       "x-amz-signature": signature
     stream.params['content-type'] = contentType if contentType
     stream.params['cache-control'] = cacheControl if cacheControl
-    stream.params['content-disposition'] = 'attachment;' if contentDisposition
+    stream.params['content-disposition'] = contentDisposition if contentDisposition
     stream['conditions']  = conditionMatching if conditionMatching
     if this.s3ForcePathStyle
       stream['public_url']  = "https://s3-#{region}.amazonaws.com/#{bucket}/#{key}"
