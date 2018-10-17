@@ -60,7 +60,7 @@ class S3Client
     dateLongPolicy = moment.utc().format('YYYYMMDD[T]HHMMSS[Z]')
 
     policyDoc.conditions.push { 'bucket': bucket }
-    policyDoc.conditions.push [ 'starts-with', '$key', key ]
+    policyDoc.conditions.push [ 'starts-with', '$key', '' ]
     policyDoc.conditions.push { 'acl': acl }
     policyDoc.conditions.push { 'cache-control': cacheControl } if cacheControl
     policyDoc.conditions.push [ 'starts-with', '$Content-Disposition', '' ] if contentDisposition
