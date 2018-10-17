@@ -63,7 +63,7 @@ class S3Client
     policyDoc.conditions.push [ 'starts-with', '$key', key ]
     policyDoc.conditions.push { 'acl': acl }
     policyDoc.conditions.push { 'cache-control': cacheControl } if cacheControl
-    policyDoc.conditions.push [ 'starts-with', '$Content-Disposition', '' ] if contentDisposition
+    # policyDoc.conditions.push [ 'starts-with', '$Content-Disposition', '' ] if contentDisposition
     policyDoc.conditions.push [ 'starts-with', '$Content-Type', '' ] if contentType
     policyDoc.conditions.push [ 'content-length-range', 0, contentLength ] if contentLength
     policyDoc.conditions.push { "x-amz-algorithm": algorithm }
